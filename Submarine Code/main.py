@@ -3,7 +3,7 @@
 import sys
 from picamera import PiCamera
 from Tkinter import *
-import ttk  
+import ttk
 import spidev
 import time
 import os
@@ -31,10 +31,10 @@ delay = .5
 
 
 
-# Initialize tkinter window with dimensions 100x100               
-root = Tk()    
+# Initialize tkinter window with dimensions 100x100
+root = Tk()
 
-root.geometry('200x400+1200+300')   
+root.geometry('200x400+1200+300')
 
 
 # camera = PiCamera()
@@ -53,7 +53,7 @@ def callback1():
     print ("end program button clicked")
 
 
-import RPi.GPIO as GPIO          
+import RPi.GPIO as GPIO
 from time import sleep
 
 in1 = 24
@@ -73,7 +73,7 @@ p.start(25)
 print("\n")
 print("The default speed & direction of motor is LOW & Forward.....")
 print("r-run s-stop f-forward b-backward l-low m-medium h-high e-exit")
-print("\n")    
+print("\n")
 
 
 # Joystick
@@ -110,7 +110,7 @@ while True:
    temp1=0
    x='z'
 
-         
+
   else:
    print("no y input")
    GPIO.output(in1,GPIO.LOW)
@@ -118,7 +118,18 @@ while True:
    x='z'
 
 
+def convert_stick_to_thrust(stick_value, stickMin, stickMax, thrustMin, thrustMax):
+    # Figure out 'width' of each range
+    stickSpan = stickMax - stickMin
+    thurstSpan = thrustMax - thrustMin
 
+    # Convert the stick’s range into a 0-1 range (float)
+    stickValueScaled = float(stick_value - stickMin) / float(stickSpan)
+
+    # Convert the 0-1 scaled range into a value in the thrust range
+    return thrustMin + (stickValueScaled * thurstSpan)
+
+print(convert_stick_to_thrust(512,0,1024,-100,100))
 
 
 
@@ -135,7 +146,7 @@ while True:
 while(1):
 
     x=raw_input()
-    
+
 
 
     if x=='r':
@@ -180,13 +191,13 @@ while(1):
         print("high")
         p.ChangeDutyCycle(75)
         x='z'
-     
-    
+
+
   #  elif x=='e':
    #     GPIO.cleanup()
     #    print("GPIO Clean up")
      #   break
-    
+
     else:
         print("<<<  wrong data  >>>")
         print("please enter the defined data to continue.....")
@@ -198,4 +209,3 @@ while(1):
 
 
 root.mainloop()
-
