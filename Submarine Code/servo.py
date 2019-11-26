@@ -18,12 +18,13 @@ def SetAngle(angle):
 
 
 while True: # Run forever
-   x=input() #comment this line if you want to use the button
+   #x=input() #comment this line if you want to use the button
    input_state = GPIO.input(12)
-   if ((input_state == False) or (x == 'r')): #get rid of everything after 'or' for button
-        SetAngle(90)
+   if input_state == False:
+        SetAngle(169)
         print ('bro')      
-        SetAngle(180)
+   else:
+       SetAngle(1)
 
 pwm.stop()
 GPIO.cleanup()
