@@ -1,30 +1,32 @@
 import RPi.GPIO as GPIO
-from time import sleep
-
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(3, GPIO.OUT)
-GPIO.setup(12, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setwarnings(False)
-pwm=GPIO.PWM(3, 50)
-pwm.start(0)
-
-def SetAngle(angle):
-    duty = angle / 18 + 2
-    GPIO.output(3, True)
-    pwm.ChangeDutyCycle(duty)
-    sleep(1)
-    GPIO.output(3, False)
-    pwm.ChangeDutyCycle(0)
 
 
-while True: # Run forever
-   #x=input() #comment this line if you want to use the button
-   input_state = GPIO.input(12)
-   if input_state == False:
-        SetAngle(169)
-        print ('bro')      
-   else:
-       SetAngle(1)
 
-pwm.stop()
+GPIO.setmode(GPIO.BCM)
+
+GPIO.setup(17,GPIO.OUT)
+p = GPIO.PWM(17, 50)
+p.start(2.5)
+
+GPIO.setup(4,GPIO.OUT)
+p1 = GPIO.PWM(4, 50)
+p1.start(0)
+
+
+from gpiozero import MCP3008
+#from time import sleep
+while True:
+    with MCP3008(channel=1) as pot1:
+        potdat1 = round((pot1.value * 10), 2)
+        print(potdat1)
+        p1.ChangeDutyCycle(potdat1)
+        
+    with MCP3008(channel=0) as pot:
+        potdat = round((pot.value * 10), 2)
+        print(potdat)
+        p.ChangeDutyCycle(potdat)
+        
+#time.sleep(0.05)
+
+p.stop()
 GPIO.cleanup()
